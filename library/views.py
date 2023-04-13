@@ -23,19 +23,9 @@ class SongViewSet(ModelViewSet):
     
     queryset = Song.objects.prefetch_related('document_files').prefetch_related('audio_files').all() 
     serializer_class = SongSerializer
-    # filter_backends = [DjangoFilterBackend, SearchFilter, OrderingFilter]
-    # filterset_class = ProductFilter
-    # pagination_class = DefaultPagination
     permission_classes = [IsAdminOrReadOnly]
     search_fields = ['title', 'description']
     ordering_fields = ['last_update']
-
-    # def get_queryset(self):
-    #     queryset = Product.objects.all()
-    #     collection_id = self.request.query_params.get('collection_id')
-    #     if collection_id is not None:
-    #         queryset = queryset.filter(collection_id=collection_id)
-    #     return queryset
 
     def get_serializer_context(self):
         return {'request': self.request}
@@ -95,11 +85,12 @@ class CustomerViewSet(ModelViewSet):
 
 class DocumentSongFileViewSet(ModelViewSet):
     serializer_class = DocumentSongFileSerialiser
+    permission_classes = [IsAdminOrReadOnly]
     
     def get_serializer_context(self):
         return {'song_id': self.kwargs['song_pk']}
     
-    @action(detail=True, permission_classes = [UploadSongFilePermission])
+    @action(detail=True)
     def get_queryset(self):
         return DocumentSongFile.objects.filter(song_id=self.kwargs['song_pk'])
 
@@ -107,11 +98,13 @@ class DocumentSongFileViewSet(ModelViewSet):
 
 class AudioSongFileViewSet(ModelViewSet):
     serializer_class =AudioSongFileSerialiser
+    permission_classes = [IsAdminOrReadOnly]
+
     
     def get_serializer_context(self):
         return {'song_id': self.kwargs['song_pk']}
     
-    @action(detail=True, permission_classes = [UploadSongFilePermission])
+    @action(detail=True)
     def get_queryset(self):
         return AudioSongFile.objects.filter(song_id=self.kwargs['song_pk'])
 

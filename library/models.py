@@ -26,6 +26,7 @@ class Category(models.Model):
 class Song(models.Model):
     title = models.CharField(max_length=255)
     slug = models.SlugField()
+    author_name = models.CharField(max_length=255, default="Unknown")
     description = models.TextField(null=True, blank=True)
     last_update = models.DateTimeField(auto_now=True)
     category = models.ForeignKey(Category, on_delete=models.PROTECT, related_name='songs')
