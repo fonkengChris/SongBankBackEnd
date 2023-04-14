@@ -13,10 +13,10 @@ from rest_framework.pagination import PageNumberPagination
 from rest_framework.permissions import IsAuthenticated, AllowAny, IsAdminUser, DjangoModelPermissions
 from rest_framework import status
 from library.permissions import FullDajngoModelPermissions, IsAdminOrReadOnly, UploadSongFilePermission, ViewCustomerHistoryPermission
-from .models import AudioSongFile, Category, Customer, DocumentSongFile, Song
+from .models import AudioSongFile, Category, Customer, DocumentSongFile, Review, Song
 # from .filters import ProductFilter
 # from .pagination import DefaultPagination
-from .serializers import AudioSongFileSerialiser, CustomerSerializer, DocumentSongFileSerialiser, SongSerializer, CategorySerializer
+from .serializers import AudioSongFileSerialiser, CustomerSerializer, DocumentSongFileSerialiser, ReviewSerializer, SongSerializer, CategorySerializer
 
 
 class SongViewSet(ModelViewSet):
@@ -48,15 +48,15 @@ class CategoryViewSet(ModelViewSet):
     #     return super().destroy(request, *args, **kwargs)
 
     
-# class ReviewViewSet(ModelViewSet):
+class ReviewViewSet(ModelViewSet):
 
-#     serializer_class = ReviewSerializer
+    serializer_class = ReviewSerializer
     
-#     def get_serializer_context(self):
-#         return {'product_id': self.kwargs['product_pk']}
+    def get_serializer_context(self):
+        return {'song_id': self.kwargs['song_pk']}
 
-#     def get_queryset(self):
-#         return Review.objects.filter(product_id=self.kwargs['product_pk'])
+    def get_queryset(self):
+        return Review.objects.filter(product_id=self.kwargs['song_pk'])
     
 
 

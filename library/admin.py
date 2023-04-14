@@ -6,7 +6,9 @@ from . import models
 
      
 
-
+class ReviewInline(admin.TabularInline):
+    model = models.Review
+    
 
 class DocumentSongInline(admin.TabularInline):
     model = models.DocumentSongFile

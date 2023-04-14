@@ -3,7 +3,7 @@ from django.db.models import Q, F
 from django.db import transaction
 from rest_framework import serializers
 # from .signals import order_created
-from .models import AudioSongFile, Category, Customer, DocumentSongFile, Song
+from .models import AudioSongFile, Category, Customer, DocumentSongFile, Review, Song
 
 
 class CategorySerializer(serializers.ModelSerializer):
@@ -45,15 +45,15 @@ class SongSerializer(serializers.ModelSerializer):
         fields = ['id', 'title', 'author_name', 'description', 'slug', 'category', 'document_files', 'audio_files']
     
 
-##DO LATER
-# class ReviewSerializer(serializers.ModelSerializer):
-#     class Meta:
-#         model = Review
-#         fields = ['id', 'date', 'name', 'description']
+class ReviewSerializer(serializers.ModelSerializer):
+    date = serializers.DateField(read_only=True)
+    class Meta:
+        model = Review
+        fields = ['id', 'date', 'description']
 
-#     def create(self, validated_data):
-#         product_id = self.context['product_id']
-#         return Review.objects.create(product_id=product_id, **validated_data)
+    def create(self, validated_data):
+        song_id = self.context['song_id']
+        return Review.objects.create(song_id=song_id, **validated_data)
     
 
 class CustomerSerializer(serializers.ModelSerializer):

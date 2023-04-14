@@ -1,7 +1,7 @@
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
-
-from library.admin import AudioSongInline, DocumentSongInline, SongAdmin
+from library.admin import AudioSongInline, DocumentSongInline, ReviewInline, SongAdmin
+from library.models import Song
 from .models import User
 
 # from django.contrib.contenttypes.admin import GenericTabularInline
@@ -30,8 +30,8 @@ class UserAdmin(BaseUserAdmin):
 
 
 class CustomSongAdmin(SongAdmin):
-    inlines = [DocumentSongInline, AudioSongInline]
+    inlines = [DocumentSongInline, AudioSongInline, ReviewInline]
 
 
-# admin.site.unregister(Product)
-# admin.site.register(Product, CustomProductAdmin)
+admin.site.unregister(Song)
+admin.site.register(Song, CustomSongAdmin)
