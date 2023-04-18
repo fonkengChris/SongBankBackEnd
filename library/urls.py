@@ -17,7 +17,7 @@ songs_router.register(
 songs_router.register(
     'audio_files', views.AudioSongFileViewSet, basename='audio-files')
 songs_router.register(
-    'preview_image', views.PreviewImageViewSet, basename='preview-iamges')
+    'preview_image', views.PreviewImageViewSet, basename='preview-images')
 
 # URLConf
 urlpatterns = router.urls + songs_router.urls

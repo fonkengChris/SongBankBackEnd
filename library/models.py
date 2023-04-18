@@ -2,6 +2,7 @@ from django.db import models
 from django.contrib import admin
 from django.conf import settings
 from django_countries.fields import CountryField
+from django.core.validators import FileExtensionValidator
 from phonenumber_field.modelfields import PhoneNumberField
 from library.validators import FileValidator
 
@@ -47,11 +48,11 @@ class Song(models.Model):
 
 class DocumentSongFile(models.Model):
     validate_file = FileValidator(
-        max_size=1024 * 1000, content_types=('application/pdf', 'application/msword'))
+        max_size=1024 * 1000, content_types=('application/pdf'))
     song = models.ForeignKey(
         Song, on_delete=models.CASCADE, related_name='document_files')
     document_file = models.FileField(
-        upload_to='library/document_files', null=True, validators=[validate_file])
+        upload_to='library/document_files', null=True, validators=[validate_file, FileExtensionValidator(allowed_extensions=['pdf'])])
 
 
 class AudioSongFile(models.Model):
@@ -61,6 +62,20 @@ class AudioSongFile(models.Model):
         Song, on_delete=models.CASCADE, related_name='audio_files')
     audio_file = models.FileField(
         upload_to='library/audio_files', null=True, validators=[validate_file])
+
+
+class Review(models.Model):
+    song = models.ForeignKey(
+        Song, on_delete=models.CASCADE, related_name='reviews')
+    description = models.TextField()
+    date = models.DateField(auto_now_add=True)
+
+
+class PreviewImage(models.Model):
+    # your fields here
+    preview_image = models.ImageField(upload_to='library/preview_images/', blank=True)
+    song = models.ForeignKey(
+        Song, on_delete=models.CASCADE, related_name='preview_image')
 
 
 class Customer(models.Model):
@@ -98,24 +113,3 @@ class Customer(models.Model):
         permissions = [
             ('view_history', 'Can view history')
         ]
-
-
-class Review(models.Model):
-    song = models.ForeignKey(
-        Song, on_delete=models.CASCADE, related_name='reviews')
-    description = models.TextField()
-    date = models.DateField(auto_now_add=True)
-
-
-class PreviewImage(models.Model):
-    # your fields here
-    preview_image = models.ImageField(upload_to='image_previews/', blank=True)
-    document_file = models.ForeignKey(
-        Song, on_delete=models.CASCADE, related_name='preview_image')
-
-    # def save(self, *args, **kwargs):
-    #     super().save(*args, **kwargs)
-    #     if self.document_model.document_file and not self.preview_image:
-    #         self.preview_image.save(
-    #             f"{self.document_model.document_file.name.split('/')[-1]}.jpg", generate_pdf_preview(self.document_model.document_file), save=False)
-    #         self.save(update_fields=['preview_image'])

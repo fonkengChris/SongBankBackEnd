@@ -18,11 +18,14 @@ class NotationSerializer(serializers.ModelSerializer):
 
 
 class PreviewImageSerializer(serializers.ModelSerializer):
-    preview_image_url = serializers.SerializerMethodField()
+    # preview_image_url = serializers.SerializerMethodField()
+    def create(self, validated_data):
+        song_id = self.context['song_id']
+        return PreviewImage.objects.create(song_id=song_id, **validated_data)
 
     class Meta:
         model = PreviewImage
-        fields = '__all__'
+        fields = ['id', 'preview_image']
 
     def get_preview_image_url(self, obj):
         if obj.preview_image:
@@ -55,6 +58,7 @@ class AudioSongFileSerialiser(serializers.ModelSerializer):
 class SongSerializer(serializers.ModelSerializer):
     document_files = DocumentSongFileSerialiser(many=True, read_only=True)
     audio_files = AudioSongFileSerialiser(many=True, read_only=True)
+    preview_image = PreviewImageSerializer(many=True, read_only=True)
 
     class Meta:
         model = Song

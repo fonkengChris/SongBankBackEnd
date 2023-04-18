@@ -17,7 +17,7 @@ from pdf2image import convert_from_path
 class SongViewSet(ModelViewSet):
 
     queryset = Song.objects.prefetch_related(
-        'document_files').prefetch_related('audio_files').all()
+        'document_files').prefetch_related('audio_files').prefetch_related('preview_image').all()
     serializer_class = SongSerializer
     permission_classes = [IsAdminOrReadOnly]
     search_fields = ['title', 'description']
@@ -88,29 +88,6 @@ class DocumentSongFileViewSet(ModelViewSet):
     def get_queryset(self):
         return DocumentSongFile.objects.filter(song_id=self.kwargs['song_pk'])
 
-    # def create(self, request, *args, **kwargs):
-    #     pdf_file = request.FILES.get('pdf_file')
-    #     if pdf_file:
-    #         # Save the uploaded PDF file to a temporary file
-    #         with tempfile.NamedTemporaryFile(delete=False) as temp_file:
-    #             for chunk in pdf_file.chunks():
-    #                 temp_file.write(chunk)
-    #         # Generate a preview image from the PDF file
-    #         with tempfile.TemporaryDirectory() as temp_dir:
-    #             images = convert_from_path(
-    #                 temp_file.name, output_folder=temp_dir)
-    #             preview_image_path = os.path.join(temp_dir, 'preview.jpg')
-    #             images[0].save(preview_image_path, 'JPEG')
-    #             # Create a new instance of MyModel and save it
-    #             mymodel = DocumentSongFile(
-    #                 document_file=pdf_file, preview_image=preview_image_path)
-    #             mymodel.save()
-    #             # Serialize the new instance and return it in the response
-    #             serializer = self.get_serializer(mymodel)
-    #             return Response(serializer.data)
-    #     else:
-    #         return Response({'error': 'No PDF file was uploaded'}, status=400)
-
 
 class AudioSongFileViewSet(ModelViewSet):
     serializer_class = AudioSongFileSerialiser
@@ -127,3 +104,10 @@ class AudioSongFileViewSet(ModelViewSet):
 class PreviewImageViewSet(ModelViewSet):
     queryset = PreviewImage.objects.all()
     serializer_class = PreviewImageSerializer
+
+    def get_serializer_context(self):
+        return {'song_id': self.kwargs['song_pk']}
+
+    @action(detail=True)
+    def get_queryset(self):
+        return PreviewImage.objects.filter(song_id=self.kwargs['song_pk'])
