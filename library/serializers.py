@@ -58,12 +58,13 @@ class AudioSongFileSerialiser(serializers.ModelSerializer):
 class SongSerializer(serializers.ModelSerializer):
     document_files = DocumentSongFileSerialiser(many=True, read_only=True)
     audio_files = AudioSongFileSerialiser(many=True, read_only=True)
+    notation = NotationSerializer()
     preview_image = PreviewImageSerializer(many=True, read_only=True)
 
     class Meta:
         model = Song
-        fields = ['id', 'title', 'author_name', 'description', 'slug',
-                  'category', 'document_files', 'audio_files', 'preview_image', 'reviews']
+        fields = ['id', 'title', 'author_name', 'notation', 'description', 'slug',
+                  'category', 'document_files', 'metacritic', 'audio_files', 'preview_image', 'reviews']
 
 
 class ReviewSerializer(serializers.ModelSerializer):

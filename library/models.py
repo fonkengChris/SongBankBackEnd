@@ -38,6 +38,7 @@ class Song(models.Model):
         Category, on_delete=models.PROTECT, related_name='songs')
     notation = models.ForeignKey(
         Notation, on_delete=models.PROTECT, related_name='songs', default=1)
+    metacritic = models.IntegerField(blank=True)
 
     def __str__(self) -> str:
         return self.title
@@ -73,7 +74,8 @@ class Review(models.Model):
 
 class PreviewImage(models.Model):
     # your fields here
-    preview_image = models.ImageField(upload_to='library/preview_images/', blank=True)
+    preview_image = models.ImageField(
+        upload_to='library/preview_images/', blank=True)
     song = models.ForeignKey(
         Song, on_delete=models.CASCADE, related_name='preview_image')
 
