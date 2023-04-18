@@ -3,23 +3,34 @@ from django.db.models.aggregates import Count
 from django.urls import reverse
 from django.utils.html import format_html, urlencode
 from . import models
+from .models import PreviewImage
 
-     
+
+class PreviewImageInline(admin.TabularInline):
+    model = PreviewImage
+    list_display = ['id', 'preview_image']
+
 
 class ReviewInline(admin.TabularInline):
     model = models.Review
-    
 
-class DocumentSongInline(admin.TabularInline):
-    model = models.DocumentSongFile
+
+class ImagePreviewInline(admin.TabularInline):
+    model = models.PreviewImage
     readonly_fields = ['thumbnail']
-
+    
     def thumbnail(self, instance):
         if instance.document.name != '':
             body = f'<iframe src="{instance.document.url}" class="thumbnail"> </iframe>'
 
             return format_html(body)
         return ''
+
+
+class DocumentSongInline(admin.TabularInline):
+    model = models.DocumentSongFile
+    
+
 
 class AudioSongInline(admin.TabularInline):
     model = models.AudioSongFile
@@ -40,7 +51,7 @@ class SongAdmin(admin.ModelAdmin):
 
     def category_title(self, song):
         return song.category.title
-    
+
     class Media:
         css = {
             'all': ['style.css']
@@ -56,10 +67,14 @@ class CustomerAdmin(admin.ModelAdmin):
     ordering = ['user__first_name', 'user__last_name']
     search_fields = ['first_name__istartswith', 'last_name__istartswith']
 
-    
 
 @admin.register(models.Category)
 class CategoryAdmin(admin.ModelAdmin):
     list_display = ['title']
-    search_fields = ['title']      
-    
+    search_fields = ['title']
+
+
+@admin.register(models.Notation)
+class NotationAdmin(admin.ModelAdmin):
+    list_display = ['title']
+    search_fields = ['title']

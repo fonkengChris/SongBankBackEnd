@@ -17,6 +17,9 @@ django-filter = "*"
 pillow = "*"
 python-magic = "*"
 django-cors-headers = "*"
+wand = "*"
+pypdf2 = "*"
+pdf2image = "*"
 
 [dev-packages]
 

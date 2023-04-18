@@ -7,15 +7,19 @@ from . import views
 router = routers.SimpleRouter()
 router.register('songs', views.SongViewSet, basename='songs')
 router.register('categories', views.CategoryViewSet)
-router.register('customers', views.CustomerViewSet) 
+router.register('customers', views.CustomerViewSet)
 
 
 songs_router = routers.NestedDefaultRouter(router, 'songs', lookup='song')
-# products_router.register('reviews', views.ReviewViewSet, basename='product-reviews')
-songs_router.register('document_files', views.DocumentSongFileViewSet, basename='document-files')
-songs_router.register('audio_files', views.AudioSongFileViewSet, basename='audio-files')
+songs_router.register('reviews', views.ReviewViewSet, basename='song-reviews')
+songs_router.register(
+    'document_files', views.DocumentSongFileViewSet, basename='document-files')
+songs_router.register(
+    'audio_files', views.AudioSongFileViewSet, basename='audio-files')
+songs_router.register(
+    'preview_image', views.PreviewImageViewSet, basename='preview-iamges')
 
-#URLConf
+# URLConf
 urlpatterns = router.urls + songs_router.urls
 
 # [

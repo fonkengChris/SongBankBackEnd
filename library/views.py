@@ -1,27 +1,23 @@
-from django.shortcuts import get_object_or_404
-from django.http import HttpResponse
-from django.db.models.aggregates import Count
-from django_filters.rest_framework import DjangoFilterBackend
-from rest_framework.decorators import api_view, action
-from rest_framework.generics import ListCreateAPIView, RetrieveUpdateDestroyAPIView
-from rest_framework.mixins import ListModelMixin, CreateModelMixin, RetrieveModelMixin, DestroyModelMixin, UpdateModelMixin
-from rest_framework.views import APIView
-from rest_framework.viewsets import ModelViewSet, GenericViewSet
-from rest_framework.filters import SearchFilter, OrderingFilter
+from rest_framework.decorators import action
+from rest_framework.viewsets import ModelViewSet
 from rest_framework.response import Response
-from rest_framework.pagination import PageNumberPagination
-from rest_framework.permissions import IsAuthenticated, AllowAny, IsAdminUser, DjangoModelPermissions
-from rest_framework import status
-from library.permissions import FullDajngoModelPermissions, IsAdminOrReadOnly, UploadSongFilePermission, ViewCustomerHistoryPermission
-from .models import AudioSongFile, Category, Customer, DocumentSongFile, Review, Song
+from rest_framework.permissions import IsAuthenticated, IsAdminUser
+from library.permissions import IsAdminOrReadOnly, ViewCustomerHistoryPermission
+from .models import AudioSongFile, Category, Customer, DocumentSongFile, Notation, PreviewImage, Review, Song
 # from .filters import ProductFilter
 # from .pagination import DefaultPagination
-from .serializers import AudioSongFileSerialiser, CustomerSerializer, DocumentSongFileSerialiser, ReviewSerializer, SongSerializer, CategorySerializer
+from .serializers import AudioSongFileSerialiser, CustomerSerializer, DocumentSongFileSerialiser, NotationSerializer, PreviewImageSerializer, ReviewSerializer, SongSerializer, CategorySerializer
+from rest_framework.response import Response
+from rest_framework.parsers import MultiPartParser, FormParser
+import tempfile
+import os
+from pdf2image import convert_from_path
 
 
 class SongViewSet(ModelViewSet):
-    
-    queryset = Song.objects.prefetch_related('document_files').prefetch_related('audio_files').all() 
+
+    queryset = Song.objects.prefetch_related(
+        'document_files').prefetch_related('audio_files').all()
     serializer_class = SongSerializer
     permission_classes = [IsAdminOrReadOnly]
     search_fields = ['title', 'description']
@@ -31,33 +27,29 @@ class SongViewSet(ModelViewSet):
         return {'request': self.request}
 
 
-
 class CategoryViewSet(ModelViewSet):
 
     queryset = Category.objects.all()
     serializer_class = CategorySerializer
     permission_classes = [IsAdminOrReadOnly]
 
-    # def destroy(self, request, *args, **kwargs):
-    #     category = get_object_or_404(
-    #         Category.objects.annotate(
-    #             psongs_count=Count('songs')), pk=kwargs['pk'])
-    #     if category.songs.count() > 0:
-    #         return Response({'error': 'Collection cannot be deleted because it includes one or more products.'}, 
-    #                         status=status.HTTP_405_METHOD_NOT_ALLOWED)
-    #     return super().destroy(request, *args, **kwargs)
 
-    
+class NotationViewSet(ModelViewSet):
+
+    queryset = Notation.objects.all()
+    serializer_class = NotationSerializer
+    permission_classes = [IsAdminOrReadOnly]
+
+
 class ReviewViewSet(ModelViewSet):
 
     serializer_class = ReviewSerializer
-    
+
     def get_serializer_context(self):
         return {'song_id': self.kwargs['song_pk']}
 
     def get_queryset(self):
         return Review.objects.filter(product_id=self.kwargs['song_pk'])
-    
 
 
 class CustomerViewSet(ModelViewSet):
@@ -71,7 +63,9 @@ class CustomerViewSet(ModelViewSet):
 
     @action(detail=False, methods=['GET', 'PUT'], permission_classes=[IsAuthenticated])
     def me(self, request):
-        (customer, created) = Customer.objects.get_or_create(user_id=request.user.id) #unpacking tuple that generates a customer object and a boolean value
+        # unpacking tuple that generates a customer object and a boolean value
+        (customer, created) = Customer.objects.get_or_create(
+            user_id=request.user.id)
         if request.method == 'GET':
             serializer = CustomerSerializer(customer)
             return Response(serializer.data)
@@ -80,31 +74,56 @@ class CustomerViewSet(ModelViewSet):
             serializer.is_valid(raise_exception=True)
             serializer.save()
             return Response(serializer.data)
-        
 
 
 class DocumentSongFileViewSet(ModelViewSet):
     serializer_class = DocumentSongFileSerialiser
     permission_classes = [IsAdminOrReadOnly]
-    
+    parser_classes = (MultiPartParser, FormParser)
+
     def get_serializer_context(self):
         return {'song_id': self.kwargs['song_pk']}
-    
+
     @action(detail=True)
     def get_queryset(self):
         return DocumentSongFile.objects.filter(song_id=self.kwargs['song_pk'])
 
+    # def create(self, request, *args, **kwargs):
+    #     pdf_file = request.FILES.get('pdf_file')
+    #     if pdf_file:
+    #         # Save the uploaded PDF file to a temporary file
+    #         with tempfile.NamedTemporaryFile(delete=False) as temp_file:
+    #             for chunk in pdf_file.chunks():
+    #                 temp_file.write(chunk)
+    #         # Generate a preview image from the PDF file
+    #         with tempfile.TemporaryDirectory() as temp_dir:
+    #             images = convert_from_path(
+    #                 temp_file.name, output_folder=temp_dir)
+    #             preview_image_path = os.path.join(temp_dir, 'preview.jpg')
+    #             images[0].save(preview_image_path, 'JPEG')
+    #             # Create a new instance of MyModel and save it
+    #             mymodel = DocumentSongFile(
+    #                 document_file=pdf_file, preview_image=preview_image_path)
+    #             mymodel.save()
+    #             # Serialize the new instance and return it in the response
+    #             serializer = self.get_serializer(mymodel)
+    #             return Response(serializer.data)
+    #     else:
+    #         return Response({'error': 'No PDF file was uploaded'}, status=400)
 
 
 class AudioSongFileViewSet(ModelViewSet):
-    serializer_class =AudioSongFileSerialiser
+    serializer_class = AudioSongFileSerialiser
     permission_classes = [IsAdminOrReadOnly]
 
-    
     def get_serializer_context(self):
         return {'song_id': self.kwargs['song_pk']}
-    
+
     @action(detail=True)
     def get_queryset(self):
         return AudioSongFile.objects.filter(song_id=self.kwargs['song_pk'])
 
+
+class PreviewImageViewSet(ModelViewSet):
+    queryset = PreviewImage.objects.all()
+    serializer_class = PreviewImageSerializer
