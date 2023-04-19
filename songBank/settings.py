@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     'djoser',
     'corsheaders',
     'debug_toolbar',
+    'django_filters',
     'django_countries',
     'phonenumber_field',
     'library',

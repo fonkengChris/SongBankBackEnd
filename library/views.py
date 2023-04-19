@@ -2,6 +2,7 @@ from rest_framework.decorators import action
 from rest_framework.viewsets import ModelViewSet
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated, IsAdminUser
+from django_filters.rest_framework import DjangoFilterBackend
 from library.permissions import IsAdminOrReadOnly, ViewCustomerHistoryPermission
 from .models import AudioSongFile, Category, Customer, DocumentSongFile, Notation, PreviewImage, Review, Song
 # from .filters import ProductFilter
@@ -16,15 +17,23 @@ from pdf2image import convert_from_path
 
 class SongViewSet(ModelViewSet):
 
-    queryset = Song.objects.prefetch_related(
-        'document_files').prefetch_related('audio_files').prefetch_related('preview_image').all()
     serializer_class = SongSerializer
     permission_classes = [IsAdminOrReadOnly]
     search_fields = ['title', 'description']
     ordering_fields = ['last_update']
+    filter_backends = [DjangoFilterBackend]
 
     def get_serializer_context(self):
         return {'request': self.request}
+
+    def get_queryset(self):
+
+        queryset = Song.objects.prefetch_related(
+            'document_files').prefetch_related('audio_files').prefetch_related('preview_image').all()
+        category = self.request.GET.get('category')
+        if category is not None:
+            queryset = queryset.filter(category=category)
+        return queryset
 
 
 class CategoryViewSet(ModelViewSet):
