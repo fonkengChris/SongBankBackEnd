@@ -14,7 +14,7 @@ class CategorySerializer(serializers.ModelSerializer):
 class NotationSerializer(serializers.ModelSerializer):
     class Meta:
         model = Notation
-        fields = ['id', 'title']
+        fields = ['id', 'title', 'slug']
 
 
 class PreviewImageSerializer(serializers.ModelSerializer):

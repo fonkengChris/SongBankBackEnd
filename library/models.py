@@ -20,6 +20,7 @@ class Category(models.Model):
 
 class Notation(models.Model):
     title = models.CharField(max_length=255)
+    slug = models.SlugField()
 
     def __str__(self) -> str:
         return self.title
@@ -37,7 +38,7 @@ class Song(models.Model):
     category = models.ForeignKey(
         Category, on_delete=models.PROTECT, related_name='songs')
     notation = models.ForeignKey(
-        Notation, on_delete=models.PROTECT, related_name='songs', default=1)
+        Notation, on_delete=models.CASCADE, related_name='songs', default=1)
     metacritic = models.IntegerField(blank=True)
 
     def __str__(self) -> str:

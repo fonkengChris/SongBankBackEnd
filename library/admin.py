@@ -18,7 +18,7 @@ class ReviewInline(admin.TabularInline):
 class ImagePreviewInline(admin.TabularInline):
     model = models.PreviewImage
     readonly_fields = ['thumbnail']
-    
+
     def thumbnail(self, instance):
         if instance.document.name != '':
             body = f'<iframe src="{instance.document.url}" class="thumbnail"> </iframe>'
@@ -29,7 +29,6 @@ class ImagePreviewInline(admin.TabularInline):
 
 class DocumentSongInline(admin.TabularInline):
     model = models.DocumentSongFile
-    
 
 
 class AudioSongInline(admin.TabularInline):
@@ -78,3 +77,6 @@ class CategoryAdmin(admin.ModelAdmin):
 class NotationAdmin(admin.ModelAdmin):
     list_display = ['title']
     search_fields = ['title']
+    prepopulated_fields = {
+        'slug': ['title']
+    }
