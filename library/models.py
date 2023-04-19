@@ -45,7 +45,7 @@ class Song(models.Model):
         return self.title
 
     class Meta:
-        ordering = ['title']
+        ordering = ['title', 'last_update', 'metacritic']
 
 
 class DocumentSongFile(models.Model):

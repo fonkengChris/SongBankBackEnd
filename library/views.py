@@ -20,7 +20,7 @@ class SongViewSet(ModelViewSet):
     serializer_class = SongSerializer
     permission_classes = [IsAdminOrReadOnly]
     search_fields = ['title', 'description']
-    ordering_fields = ['last_update']
+    ordering_fields = ['last_update', 'title', 'metacritic']
     filter_backends = [DjangoFilterBackend]
 
     def get_serializer_context(self):
@@ -31,8 +31,14 @@ class SongViewSet(ModelViewSet):
         queryset = Song.objects.prefetch_related(
             'document_files').prefetch_related('audio_files').prefetch_related('preview_image').all()
         category = self.request.GET.get('category')
+        notation = self.request.GET.get('notation')
+        ordering = self.request.GET.get('ordering')
         if category is not None:
             queryset = queryset.filter(category=category)
+        if notation is not None:
+            queryset = queryset.filter(notation=notation)
+        if ordering is not None:
+            queryset = queryset.order_by(ordering)
         return queryset
 
 
