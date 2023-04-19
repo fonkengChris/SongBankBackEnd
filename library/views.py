@@ -3,6 +3,7 @@ from rest_framework.viewsets import ModelViewSet
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated, IsAdminUser
 from django_filters.rest_framework import DjangoFilterBackend
+from django.db.models import Q
 from library.permissions import IsAdminOrReadOnly, ViewCustomerHistoryPermission
 from .models import AudioSongFile, Category, Customer, DocumentSongFile, Notation, PreviewImage, Review, Song
 # from .filters import ProductFilter
@@ -33,12 +34,16 @@ class SongViewSet(ModelViewSet):
         category = self.request.GET.get('category')
         notation = self.request.GET.get('notation')
         ordering = self.request.GET.get('ordering')
+        search = self.request.GET.get('search')
         if category is not None:
             queryset = queryset.filter(category=category)
         if notation is not None:
             queryset = queryset.filter(notation=notation)
         if ordering is not None:
             queryset = queryset.order_by(ordering)
+        if search is not None:
+            queryset = queryset.filter(Q(title__icontains=search) | Q(
+                author_name__icontains=search) | Q(category__title__icontains=search))
         return queryset
 
 
