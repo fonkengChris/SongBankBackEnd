@@ -59,7 +59,7 @@ class DocumentSongFile(models.Model):
 
 class AudioSongFile(models.Model):
     validate_file = FileValidator(
-        max_size=1024 * 100, content_types=('application/mp3', 'application/wav'))
+        max_size=1024 * 5000, content_types=('audio/mp3', 'audio/wav', 'audio/ogg'))
     song = models.ForeignKey(
         Song, on_delete=models.CASCADE, related_name='audio_files')
     audio_file = models.FileField(
@@ -98,7 +98,7 @@ class Customer(models.Model):
         max_length=1, choices=MEMBERSHIP_CHOICES, default=MEMBERSHIP_BRONZE)
     country = CountryField(default="EN")
     user = models.OneToOneField(
-        settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+            settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
 
     @admin.display(ordering='user__first_name')
     def first_name(self):

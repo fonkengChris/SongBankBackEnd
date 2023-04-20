@@ -67,8 +67,6 @@ class SongSerializer(serializers.ModelSerializer):
                   'category', 'document_files', 'metacritic', 'audio_files', 'preview_image', 'reviews']
 
 
-
-
 class ReviewSerializer(serializers.ModelSerializer):
     date = serializers.DateField(read_only=True)
 
@@ -83,8 +81,10 @@ class ReviewSerializer(serializers.ModelSerializer):
 
 class CustomerSerializer(serializers.ModelSerializer):
 
-    user_id = serializers.IntegerField(read_only=True)
+    user_id = serializers.IntegerField()
+    country = serializers.CharField()
 
     class Meta:
         model = Customer
-        fields = ['id', 'user_id', 'phone', 'birth_date', 'membership']
+        fields = ['id', 'user_id', 'phone',
+                  'country', 'birth_date', 'membership']
