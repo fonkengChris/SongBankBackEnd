@@ -1,19 +1,26 @@
-from rest_framework.decorators import action
-from rest_framework.viewsets import ModelViewSet
-from rest_framework.response import Response
-from rest_framework.permissions import IsAuthenticated, IsAdminUser
-from django_filters.rest_framework import DjangoFilterBackend
+import os
+import tempfile
+
 from django.db.models import Q
-from library.permissions import IsAdminOrReadOnly, ViewCustomerHistoryPermission
-from .models import AudioSongFile, Category, Customer, DocumentSongFile, Notation, PreviewImage, Review, Song
+from django_filters.rest_framework import DjangoFilterBackend
+from pdf2image import convert_from_path
+from rest_framework.decorators import action
+from rest_framework.parsers import FormParser, MultiPartParser
+from rest_framework.permissions import IsAdminUser, IsAuthenticated
+from rest_framework.response import Response
+from rest_framework.viewsets import ModelViewSet
+
+from library.permissions import (IsAdminOrReadOnly,
+                                 ViewCustomerHistoryPermission)
+
+from .models import (AudioSongFile, Category, Customer, DocumentSongFile,
+                     Notation, PreviewImage, Review, Song)
 # from .filters import ProductFilter
 # from .pagination import DefaultPagination
-from .serializers import AudioSongFileSerialiser, CustomerSerializer, DocumentSongFileSerialiser, NotationSerializer, PreviewImageSerializer, ReviewSerializer, SongSerializer, CategorySerializer
-from rest_framework.response import Response
-from rest_framework.parsers import MultiPartParser, FormParser
-import tempfile
-import os
-from pdf2image import convert_from_path
+from .serializers import (AudioSongFileSerialiser, CategorySerializer,
+                          CustomerSerializer, DocumentSongFileSerialiser,
+                          NotationSerializer, PreviewImageSerializer,
+                          ReviewSerializer, SongSerializer)
 
 
 class SongViewSet(ModelViewSet):
@@ -34,6 +41,7 @@ class SongViewSet(ModelViewSet):
         category = self.request.GET.get('category')
         notation = self.request.GET.get('notation')
         ordering = self.request.GET.get('ordering')
+        slug = self.request.GET.get('slug')
         search = self.request.GET.get('search')
         if category is not None:
             queryset = queryset.filter(category=category)

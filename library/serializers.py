@@ -59,6 +59,7 @@ class SongSerializer(serializers.ModelSerializer):
     document_files = DocumentSongFileSerialiser(many=True, read_only=True)
     audio_files = AudioSongFileSerialiser(many=True, read_only=True)
     notation = NotationSerializer()
+    category = CategorySerializer()
     preview_image = PreviewImageSerializer(many=True, read_only=True)
 
     class Meta:
