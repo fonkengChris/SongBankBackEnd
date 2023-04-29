@@ -59,6 +59,7 @@ class CreateUserViewset(ModelViewSet):
         # Generate the token using CustomTokenObtainPairSerializer
         token_serializer = CustomTokenObtainPairSerializer(data={
             'email': serializer.data['email'],
+            'first_name': serializer.data['first_name'],
             'password': request.data.get('password')
         })
 
@@ -76,7 +77,7 @@ class CreateUserViewset(ModelViewSet):
         serializer.save()
 
     def post(self, request, *args, **kwargs):
-        user = request.data
+        user = User.objects.filter(email=request.data.email)
         serializer = UserCreateSerializer(data=user)
         serializer.is_valid(raise_exception=True)
         serializer.save()

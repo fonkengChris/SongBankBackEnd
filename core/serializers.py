@@ -37,7 +37,8 @@ class CustomTokenObtainPairSerializer(TokenObtainPairSerializer):
         # Add custom user data to the token payload
         data['user_id'] = self.user.id
         data['email'] = self.user.email
-       
+        data['first_name'] = self.user.first_name
+
         return data
 
     @classmethod
@@ -47,7 +48,9 @@ class CustomTokenObtainPairSerializer(TokenObtainPairSerializer):
         # Add custom user data to the access token payload
         token['user_id'] = user.id
         token['email'] = user.email
-        
+        token['first_name'] = user.first_name
+        token['last_name'] = user.last_name
+
         return token
 
     def authenticate(self, request, **kwargs):
