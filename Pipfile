@@ -20,6 +20,8 @@ django-cors-headers = "*"
 wand = "*"
 pypdf2 = "*"
 pdf2image = "*"
+djangorestframework-jwt = "*"
+django-extensions = "*"
 
 [dev-packages]
 
