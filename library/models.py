@@ -35,6 +35,8 @@ class Song(models.Model):
     author_name = models.CharField(max_length=255, default="Unknown")
     description = models.TextField(null=True, blank=True)
     last_update = models.DateTimeField(auto_now=True)
+    likes = models.IntegerField()
+    downloads = models.IntegerField()
     category = models.ForeignKey(
         Category, on_delete=models.PROTECT, related_name='songs')
     notation = models.ForeignKey(
@@ -66,11 +68,11 @@ class AudioSongFile(models.Model):
         upload_to='library/audio_files', null=True, validators=[validate_file])
 
 
-class Review(models.Model):
-    song = models.ForeignKey(
-        Song, on_delete=models.CASCADE, related_name='reviews')
-    description = models.TextField()
-    date = models.DateField(auto_now_add=True)
+# class Review(models.Model):
+#     song = models.ForeignKey(
+#         Song, on_delete=models.CASCADE, related_name='reviews')
+#     description = models.TextField()
+#     date = models.DateField(auto_now_add=True)
 
 
 class PreviewImage(models.Model):
@@ -98,7 +100,7 @@ class Customer(models.Model):
         max_length=1, choices=MEMBERSHIP_CHOICES, default=MEMBERSHIP_BRONZE)
     country = CountryField(default="EN")
     user = models.OneToOneField(
-            settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+        settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
 
     @admin.display(ordering='user__first_name')
     def first_name(self):

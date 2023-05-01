@@ -2,7 +2,8 @@ from decimal import Decimal
 from django.db.models import Q, F
 from django.db import transaction
 from rest_framework import serializers
-from .models import AudioSongFile, Category, Customer, DocumentSongFile, Notation, PreviewImage, Review, Song
+from songBank import settings
+from .models import AudioSongFile, Category, Customer, DocumentSongFile, Notation, PreviewImage, Song
 
 
 class CategorySerializer(serializers.ModelSerializer):
@@ -65,19 +66,25 @@ class SongSerializer(serializers.ModelSerializer):
     class Meta:
         model = Song
         fields = ['id', 'title', 'author_name', 'notation', 'description', 'slug',
-                  'category', 'document_files', 'metacritic', 'audio_files', 'preview_image', 'reviews']
+                  'category', 'document_files', 'metacritic', 'audio_files', 'preview_image']
 
 
-class ReviewSerializer(serializers.ModelSerializer):
-    date = serializers.DateField(read_only=True)
+# class ReviewSerializer(serializers.ModelSerializer):
+#     date = serializers.DateField(read_only=True)
+
+#     class Meta:
+#         model = Review
+#         fields = ['id', 'date', 'description']
+
+#     def create(self, validated_data):
+#         song_id = self.context['song_id']
+#         return Review.objects.create(song_id=song_id, **validated_data)
+
+
+class CustomUserSerializer(serializers.ModelSerializer):
 
     class Meta:
-        model = Review
-        fields = ['id', 'date', 'description']
-
-    def create(self, validated_data):
-        song_id = self.context['song_id']
-        return Review.objects.create(song_id=song_id, **validated_data)
+        model = settings.AUTH_USER_MODEL
 
 
 class CustomerSerializer(serializers.ModelSerializer):

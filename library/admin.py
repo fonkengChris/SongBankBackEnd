@@ -11,8 +11,8 @@ class PreviewImageInline(admin.TabularInline):
     list_display = ['id', 'preview_image']
 
 
-class ReviewInline(admin.TabularInline):
-    model = models.Review
+# class ReviewInline(admin.TabularInline):
+#     model = models.Review
 
 
 class ImagePreviewInline(admin.TabularInline):

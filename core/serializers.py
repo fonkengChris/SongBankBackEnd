@@ -24,20 +24,16 @@ class UserSerializer(BaseUserSerializer):
 
 class CustomTokenObtainPairSerializer(TokenObtainPairSerializer):
 
-    def __call__(self, *args, **kwargs):
-        print('CustomTokenObtainPairSerializer called')
-        return super().__call__(*args, **kwargs)
-    """
-    Custom token serializer that includes additional user data in the token payload.
-    """
+    def __init__(self, *args, **kwargs):
+        self.email = kwargs.pop('email', None)
+        self.password = kwargs.pop('password', None)
+        super().__init__(*args, **kwargs)
 
     def validate(self, attrs):
         data = super().validate(attrs)
 
         # Add custom user data to the token payload
-        data['user_id'] = self.user.id
         data['email'] = self.user.email
-        data['first_name'] = self.user.first_name
 
         return data
 
@@ -57,8 +53,8 @@ class CustomTokenObtainPairSerializer(TokenObtainPairSerializer):
         """
         Authenticate the user based on the request data.
         """
-        email = kwargs.get('email', None)
-        password = kwargs.get('password', None)
+        email = kwargs.get('email', self.email)
+        password = kwargs.get('password', self.password)
 
         if not email or not password:
             return None

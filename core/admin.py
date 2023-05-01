@@ -1,6 +1,6 @@
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
-from library.admin import AudioSongInline, DocumentSongInline, ImagePreviewInline, ReviewInline, SongAdmin
+from library.admin import AudioSongInline, DocumentSongInline, ImagePreviewInline, SongAdmin
 from library.models import Song
 from .models import User
 from django import forms
@@ -92,7 +92,7 @@ class UserAdmin(BaseUserAdmin):
 
 class CustomSongAdmin(SongAdmin):
     inlines = [DocumentSongInline, AudioSongInline,
-               ReviewInline, ImagePreviewInline]
+                ImagePreviewInline]
 
 
 admin.site.unregister(Song)

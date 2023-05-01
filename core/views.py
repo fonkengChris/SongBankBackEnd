@@ -1,34 +1,3 @@
-# from django.shortcuts import render
-# from django.contrib.auth.signals import user_logged_in
-# from rest_framework import status
-# from rest_framework.viewsets import ModelViewSet
-# from rest_framework.response import Response
-# from rest_framework.decorators import action
-# from rest_framework.permissions import AllowAny
-# from rest_framework_jwt.utils import jwt_payload_handler
-# import jwt
-# from core.models import User
-# from core.serializers import CustomTokenObtainPairSerializer, UserCreateSerializer, UserSerializer
-# from songBank import settings
-
-
-# class CreateUserViewset(ModelViewSet):
-
-#     # Allow any user (authenticated or not) to access this url
-
-#     permission_classes = (AllowAny,)
-#     serializer_class = CustomTokenObtainPairSerializer
-#     queryset = User.objects.all()
-
-#     def post(self, request, *args, **kwargs):
-
-#         user = request.data
-#         serializer = UserCreateSerializer(data=user)
-#         serializer.is_valid(raise_exception=True)
-#         serializer.save()
-
-#         return Response(serializer.data, status=status.HTTP_201_CREATED)
-
 
 from django.shortcuts import render
 from django.contrib.auth.signals import user_logged_in

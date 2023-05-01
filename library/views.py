@@ -6,7 +6,7 @@ from django_filters.rest_framework import DjangoFilterBackend
 from pdf2image import convert_from_path
 from rest_framework.decorators import action
 from rest_framework.parsers import FormParser, MultiPartParser
-from rest_framework.permissions import IsAdminUser, IsAuthenticated
+from rest_framework.permissions import IsAdminUser, IsAuthenticated, AllowAny
 from rest_framework.response import Response
 from rest_framework.viewsets import ModelViewSet
 
@@ -14,13 +14,13 @@ from library.permissions import (IsAdminOrReadOnly,
                                  ViewCustomerHistoryPermission)
 
 from .models import (AudioSongFile, Category, Customer, DocumentSongFile,
-                     Notation, PreviewImage, Review, Song)
+                     Notation, PreviewImage,  Song)
 # from .filters import ProductFilter
 # from .pagination import DefaultPagination
 from .serializers import (AudioSongFileSerialiser, CategorySerializer,
                           CustomerSerializer, DocumentSongFileSerialiser,
                           NotationSerializer, PreviewImageSerializer,
-                          ReviewSerializer, SongSerializer)
+                          SongSerializer)
 
 
 class SongViewSet(ModelViewSet):
@@ -69,23 +69,23 @@ class NotationViewSet(ModelViewSet):
     permission_classes = [IsAdminOrReadOnly]
 
 
-class ReviewViewSet(ModelViewSet):
+# class ReviewViewSet(ModelViewSet):
 
-    serializer_class = ReviewSerializer
+#     serializer_class = ReviewSerializer
 
-    def get_serializer_context(self):
-        return {'song_id': self.kwargs['song_pk']}
+#     def get_serializer_context(self):
+#         return {'song_id': self.kwargs['song_pk']}
 
-    def get_queryset(self):
-        return Review.objects.filter(product_id=self.kwargs['song_pk'])
+#     def get_queryset(self):
+#         return Review.objects.filter(product_id=self.kwargs['song_pk'])
 
 
 class CustomerViewSet(ModelViewSet):
     queryset = Customer.objects.all()
     serializer_class = CustomerSerializer
-    # permission_classes = [IsAuthenticated]
+    permission_classes = [IsAuthenticated]
 
-    @action(detail=True, permission_classes=[ViewCustomerHistoryPermission])
+    @action(detail=True)
     def history(self, request, pk):
         return Response('ok')
 

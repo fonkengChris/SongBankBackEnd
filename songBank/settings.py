@@ -191,7 +191,8 @@ REST_FRAMEWORK = {
         'rest_framework.renderers.BrowsableAPIRenderer',
     ),
     'DEFAULT_AUTHENTICATION_CLASSES': (
-        'core.serializers.CustomTokenObtainPairSerializer',
+        # 'core.serializers.CustomTokenObtainPairSerializer',
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
     ),
     'DEFAULT_PERMISSION_CLASSES': (
         'rest_framework.permissions.IsAuthenticated',
@@ -220,6 +221,7 @@ SIMPLE_JWT = {
 
     'AUTH_TOKEN_CLASSES': (
         'core.serializers.CustomTokenObtainPairSerializer',
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
     ),
     'TOKEN_TYPE_CLAIM': 'token_type',
 }
