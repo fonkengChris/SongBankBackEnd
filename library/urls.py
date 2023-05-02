@@ -7,7 +7,7 @@ from . import views
 router = routers.SimpleRouter()
 router.register('songs', views.SongViewSet, basename='songs')
 router.register('categories', views.CategoryViewSet)
-router.register('customers', views.CustomerViewSet)
+router.register('customers', views.CustomerViewSet, basename='customers')
 router.register('notations', views.NotationViewSet)
 
 

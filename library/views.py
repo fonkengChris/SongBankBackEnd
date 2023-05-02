@@ -69,21 +69,17 @@ class NotationViewSet(ModelViewSet):
     permission_classes = [IsAdminOrReadOnly]
 
 
-# class ReviewViewSet(ModelViewSet):
-
-#     serializer_class = ReviewSerializer
-
-#     def get_serializer_context(self):
-#         return {'song_id': self.kwargs['song_pk']}
-
-#     def get_queryset(self):
-#         return Review.objects.filter(product_id=self.kwargs['song_pk'])
-
-
 class CustomerViewSet(ModelViewSet):
-    queryset = Customer.objects.all()
+
     serializer_class = CustomerSerializer
-    permission_classes = [IsAuthenticated]
+    permission_classes = [AllowAny]
+
+    def get_queryset(self):
+        queryset = Customer.objects.all()
+        user_id = self.request.GET.get('user_id')
+        if user_id is not None:
+            queryset = queryset.filter(user_id=user_id)
+        return queryset
 
     @action(detail=True)
     def history(self, request, pk):
