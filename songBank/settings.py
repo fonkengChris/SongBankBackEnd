@@ -195,8 +195,7 @@ REST_FRAMEWORK = {
         'rest_framework_simplejwt.authentication.JWTAuthentication',
     ),
     'DEFAULT_PERMISSION_CLASSES': (
-        'rest_framework.permissions.IsAuthenticated',
-    ),
+        'rest_framework.permissions.IsAuthenticated', ),
     'DEFAULT_TOKEN_ENFORCING': True,  # Require token in requests
     'DEFAULT_TOKEN_ENCODER': 'core.encoder.CustomTokenEncoder',  # Set custom token encoder
 }

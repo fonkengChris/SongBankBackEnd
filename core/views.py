@@ -9,7 +9,8 @@ from rest_framework.permissions import AllowAny
 from rest_framework_jwt.utils import jwt_payload_handler
 import jwt
 from core.models import User
-from core.serializers import CustomTokenObtainPairSerializer, UserCreateSerializer, UserSerializer
+from rest_framework.permissions import IsAuthenticated, AllowAny
+from core.serializers import ChangePasswordSerializer, CustomTokenObtainPairSerializer, UserCreateSerializer, UserSerializer
 from songBank import settings
 from rest_framework_simplejwt.views import TokenObtainPairView
 
@@ -56,3 +57,18 @@ class CreateUserViewset(ModelViewSet):
 
 class CustomTokenObtainPairView(TokenObtainPairView):
     serializer_class = CustomTokenObtainPairSerializer
+
+
+class ChangePasswordViewSet(ModelViewSet):
+
+    queryset = User.objects.all()
+    permission_classes = (AllowAny, )
+    serializer_class = ChangePasswordSerializer
+
+    def update(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        self.request.user.set_password(
+            serializer.validated_data['new_password'])
+        self.request.user.save()
+        return Response({'detail': 'Password updated successfully.'})
