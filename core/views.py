@@ -7,9 +7,11 @@ from rest_framework.response import Response
 from rest_framework.decorators import action
 from rest_framework.permissions import AllowAny
 from rest_framework_jwt.utils import jwt_payload_handler
+from rest_framework.authentication import TokenAuthentication
 import jwt
 from core.models import User
 from rest_framework.permissions import IsAuthenticated, AllowAny
+from core.permissions import CustomIsAuthenticated
 from core.serializers import ChangePasswordSerializer, CustomTokenObtainPairSerializer, UserCreateSerializer, UserSerializer
 from songBank import settings
 from rest_framework_simplejwt.views import TokenObtainPairView
@@ -62,7 +64,8 @@ class CustomTokenObtainPairView(TokenObtainPairView):
 class ChangePasswordViewSet(ModelViewSet):
 
     queryset = User.objects.all()
-    permission_classes = (AllowAny, )
+    permission_classes = (CustomIsAuthenticated, )
+    authentication_classes = [TokenAuthentication]
     serializer_class = ChangePasswordSerializer
 
     def update(self, request, *args, **kwargs):

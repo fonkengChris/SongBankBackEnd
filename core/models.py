@@ -57,7 +57,10 @@ class User(AbstractBaseUser,  PermissionsMixin):
     REQUIRED_FIELDS = ['first_name', 'last_name']
 
     def save(self, *args, **kwargs):
+
+        print(f'User before saving: {self}')
         super(User, self).save(*args, **kwargs)
+        print(f'User after saving: {self}')
         return self
 
     def __str__(self):

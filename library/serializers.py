@@ -66,19 +66,7 @@ class SongSerializer(serializers.ModelSerializer):
     class Meta:
         model = Song
         fields = ['id', 'title', 'author_name', 'notation', 'description', 'slug',
-                  'category', 'document_files', 'metacritic', 'audio_files', 'preview_image']
-
-
-# class ReviewSerializer(serializers.ModelSerializer):
-#     date = serializers.DateField(read_only=True)
-
-#     class Meta:
-#         model = Review
-#         fields = ['id', 'date', 'description']
-
-#     def create(self, validated_data):
-#         song_id = self.context['song_id']
-#         return Review.objects.create(song_id=song_id, **validated_data)
+                  'category', 'document_files', 'metacritic', 'audio_files', 'lyrics', 'preview_image']
 
 
 class CustomUserSerializer(serializers.ModelSerializer):

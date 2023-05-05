@@ -36,7 +36,8 @@ class Song(models.Model):
     description = models.TextField(null=True, blank=True)
     last_update = models.DateTimeField(auto_now=True)
     likes = models.IntegerField()
-    downloads = models.IntegerField()
+    lyrics = models.TextField()
+    views = models.IntegerField()
     category = models.ForeignKey(
         Category, on_delete=models.PROTECT, related_name='songs')
     notation = models.ForeignKey(
@@ -66,13 +67,6 @@ class AudioSongFile(models.Model):
         Song, on_delete=models.CASCADE, related_name='audio_files')
     audio_file = models.FileField(
         upload_to='library/audio_files', null=True, validators=[validate_file])
-
-
-# class Review(models.Model):
-#     song = models.ForeignKey(
-#         Song, on_delete=models.CASCADE, related_name='reviews')
-#     description = models.TextField()
-#     date = models.DateField(auto_now_add=True)
 
 
 class PreviewImage(models.Model):
