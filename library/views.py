@@ -54,6 +54,16 @@ class SongViewSet(ModelViewSet):
                 author_name__icontains=search) | Q(category__title__icontains=search))
         return queryset
 
+    @action(detail=True, methods=['post'])
+    def like_unlike(self, request, pk=None):
+        post = self.get_object()
+        if post.likes.filter(pk=request.user.pk).exists():
+            post.likes.remove(request.user)
+        else:
+            post.likes.add(request.user)
+        serializer = self.get_serializer(post)
+        return Response(serializer.data)
+
 
 class CategoryViewSet(ModelViewSet):
 

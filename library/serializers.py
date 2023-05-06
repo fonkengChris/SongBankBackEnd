@@ -66,7 +66,7 @@ class SongSerializer(serializers.ModelSerializer):
     class Meta:
         model = Song
         fields = ['id', 'title', 'author_name', 'notation', 'description', 'slug',
-                  'category', 'document_files', 'metacritic', 'audio_files', 'lyrics', 'preview_image']
+                  'category', 'document_files', 'metacritic', 'audio_files', 'views', 'likes', 'language', 'lyrics', 'preview_image']
 
 
 class CustomUserSerializer(serializers.ModelSerializer):

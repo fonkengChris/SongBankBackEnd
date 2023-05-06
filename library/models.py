@@ -35,8 +35,10 @@ class Song(models.Model):
     author_name = models.CharField(max_length=255, default="Unknown")
     description = models.TextField(null=True, blank=True)
     last_update = models.DateTimeField(auto_now=True)
-    likes = models.IntegerField()
+    likes = models.ManyToManyField(
+        settings.AUTH_USER_MODEL, blank=True, related_name='likes')
     lyrics = models.TextField()
+    language = models.CharField(max_length=255, default="EN")
     views = models.IntegerField()
     category = models.ForeignKey(
         Category, on_delete=models.PROTECT, related_name='songs')
@@ -93,6 +95,8 @@ class Customer(models.Model):
     membership = models.CharField(
         max_length=1, choices=MEMBERSHIP_CHOICES, default=MEMBERSHIP_BRONZE)
     country = CountryField(default="EN")
+    favourite_list = models.ManyToManyField(
+        Song, blank=True, related_name='my_list')
     user = models.OneToOneField(
         settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
 

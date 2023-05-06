@@ -20,5 +20,13 @@ songs_router.register(
 songs_router.register(
     'preview_image', views.PreviewImageViewSet, basename='preview-images')
 
+urlpatterns1 = [
+    path('', include(router.urls)),
+    # register custom path with router
+    path('like/unlike/<int:pk>/', include(router.urls)),
+]
+
 # URLConf
-urlpatterns = router.urls + songs_router.urls
+urlpatterns = router.urls + songs_router.urls + urlpatterns1
+
+# print(urlpatterns)
