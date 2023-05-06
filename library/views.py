@@ -13,12 +13,12 @@ from rest_framework.viewsets import ModelViewSet
 from library.permissions import (IsAdminOrReadOnly,
                                  ViewCustomerHistoryPermission)
 
-from .models import (AudioSongFile, Category, Customer, DocumentSongFile,
+from .models import (AudioSongFile, Category, Customer, DocumentSongFile, Language,
                      Notation, PreviewImage,  Song)
 # from .filters import ProductFilter
 # from .pagination import DefaultPagination
 from .serializers import (AudioSongFileSerialiser, CategorySerializer,
-                          CustomerSerializer, DocumentSongFileSerialiser,
+                          CustomerSerializer, DocumentSongFileSerialiser, LanguageSerializer,
                           NotationSerializer, PreviewImageSerializer,
                           SongSerializer)
 
@@ -76,6 +76,13 @@ class NotationViewSet(ModelViewSet):
 
     queryset = Notation.objects.all()
     serializer_class = NotationSerializer
+    permission_classes = [IsAdminOrReadOnly]
+
+
+class LanguageViewSet(ModelViewSet):
+
+    queryset = Language.objects.all()
+    serializer_class = LanguageSerializer
     permission_classes = [IsAdminOrReadOnly]
 
 

@@ -9,7 +9,6 @@ from library.validators import FileValidator
 
 class Category(models.Model):
     title = models.CharField(max_length=255)
-    # featured_song = models.ForeignKey('Song', on_delete=models.SET_NULL, null=True, related_name='+')
 
     def __str__(self) -> str:
         return self.title
@@ -29,6 +28,17 @@ class Notation(models.Model):
         ordering = ['title']
 
 
+class Language(models.Model):
+    name = models.CharField(max_length=255)
+    code = models.CharField(max_length=10)
+
+    def __str__(self) -> str:
+        return self.name
+
+    class Meta:
+        ordering = ['name']
+
+
 class Song(models.Model):
     title = models.CharField(max_length=255)
     slug = models.SlugField()
@@ -38,7 +48,8 @@ class Song(models.Model):
     likes = models.ManyToManyField(
         settings.AUTH_USER_MODEL, blank=True, related_name='likes')
     lyrics = models.TextField()
-    language = models.CharField(max_length=255, default="EN")
+    language = models.ForeignKey(
+        Language, on_delete=models.CASCADE, related_name='songs')
     views = models.IntegerField()
     category = models.ForeignKey(
         Category, on_delete=models.PROTECT, related_name='songs')

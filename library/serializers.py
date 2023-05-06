@@ -3,7 +3,7 @@ from django.db.models import Q, F
 from django.db import transaction
 from rest_framework import serializers
 from songBank import settings
-from .models import AudioSongFile, Category, Customer, DocumentSongFile, Notation, PreviewImage, Song
+from .models import AudioSongFile, Category, Customer, DocumentSongFile, Language, Notation, PreviewImage, Song
 
 
 class CategorySerializer(serializers.ModelSerializer):
@@ -15,6 +15,11 @@ class CategorySerializer(serializers.ModelSerializer):
 class NotationSerializer(serializers.ModelSerializer):
     class Meta:
         model = Notation
+        fields = ['id', 'title', 'slug']
+
+class LanguageSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Language
         fields = ['id', 'title', 'slug']
 
 

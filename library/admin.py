@@ -80,3 +80,9 @@ class NotationAdmin(admin.ModelAdmin):
     prepopulated_fields = {
         'slug': ['title']
     }
+
+
+@admin.register(models.Language)
+class LanguageAdmin(admin.ModelAdmin):
+    list_display = ['name']
+    search_fields = ['name']
