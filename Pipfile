@@ -1,0 +1,35 @@
+[[source]]
+url = "https://pypi.org/simple"
+verify_ssl = true
+name = "pypi"
+
+[packages]
+django = "*"
+django-debug-toolbar = "*"
+mysqlclient = "*"
+djangorestframework = "*"
+django-countries = "*"
+django-phonenumber-field = {extras = ["phonenumberslite"], version = "*"}
+djoser = "*"
+djangorestframework-simplejwt = "*"
+drf-nested-routers = "*"
+django-filter = "*"
+pillow = "*"
+python-magic = "*"
+django-cors-headers = "*"
+wand = "*"
+pypdf2 = "*"
+pdf2image = "*"
+djangorestframework-jwt = "*"
+django-extensions = "*"
+django-elasticsearch-dsl = "*"
+gunicorn = "*"
+dj-database-url = "*"
+
+[dev-packages]
+
+[requires]
+python_version = "3.10"
+
+[pipenv]
+allow_prereleases = true
