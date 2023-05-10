@@ -25,6 +25,7 @@ django-extensions = "*"
 django-elasticsearch-dsl = "*"
 gunicorn = "*"
 dj-database-url = "*"
+django-fulltext-search = {git = "https://github.com/confirm/django-fulltext-search.git"}
 
 [dev-packages]
 

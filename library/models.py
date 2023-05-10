@@ -2,6 +2,7 @@ from django.db import models
 from django.contrib import admin
 from django.conf import settings
 from django_countries.fields import CountryField
+from django_fulltext_search import SearchManager
 from django.core.validators import FileExtensionValidator
 from phonenumber_field.modelfields import PhoneNumberField
 from library.validators import FileValidator
@@ -40,6 +41,11 @@ class Language(models.Model):
 
 
 class Song(models.Model):
+    ''' Song model. '''
+
+    # Enable full-text search support for first_name and last_name fields.
+    objects = SearchManager(['title', 'author_name', 'lyrics'])
+
     title = models.CharField(max_length=255)
     slug = models.SlugField()
     author_name = models.CharField(max_length=255, default="Unknown")

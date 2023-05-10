@@ -52,8 +52,7 @@ class SongViewSet(ModelViewSet):
         if ordering is not None:
             queryset = queryset.order_by(ordering)
         if search is not None:
-            queryset = queryset.filter(Q(title__icontains=search) | Q(
-                author_name__icontains=search) | Q(category__title__icontains=search))
+            queryset = Song.objects.search(search)
         return queryset
 
     @action(detail=True, methods=['post'])
