@@ -13,7 +13,7 @@ from core.models import User
 from rest_framework.permissions import IsAuthenticated, AllowAny
 from core.permissions import CustomIsAuthenticated
 from core.serializers import ChangePasswordSerializer, CustomTokenObtainPairSerializer, UserCreateSerializer, UserSerializer
-from songBank import settings
+from songBank.settings import base_settings
 from rest_framework_simplejwt.views import TokenObtainPairView
 
 

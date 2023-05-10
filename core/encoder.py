@@ -10,7 +10,7 @@ import jwt
 from django.shortcuts import render
 from django.contrib.auth.signals import user_logged_in
 from core.models import User
-from songBank import settings
+from songBank.settings import base_settings
 from rest_framework import status
 
 

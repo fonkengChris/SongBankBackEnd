@@ -2,7 +2,7 @@ from decimal import Decimal
 from django.db.models import Q, F
 from django.db import transaction
 from rest_framework import serializers
-from songBank import settings
+from songBank.settings import base_settings
 from .models import AudioSongFile, Category, Customer, DocumentSongFile, Language, Notation, PreviewImage, Song
 
 
@@ -77,7 +77,7 @@ class SongSerializer(serializers.ModelSerializer):
 class CustomUserSerializer(serializers.ModelSerializer):
 
     class Meta:
-        model = settings.AUTH_USER_MODEL
+        model = base_settings.AUTH_USER_MODEL
 
 
 class CustomerSerializer(serializers.ModelSerializer):

@@ -66,7 +66,7 @@ class Song(models.Model):
 
 class DocumentSongFile(models.Model):
     validate_file = FileValidator(
-        max_size=1024 * 1000, content_types=('application/pdf'))
+        max_size=1024 * 10000, content_types=('application/pdf'))
     song = models.ForeignKey(
         Song, on_delete=models.CASCADE, related_name='document_files')
     document_file = models.FileField(
@@ -75,7 +75,7 @@ class DocumentSongFile(models.Model):
 
 class AudioSongFile(models.Model):
     validate_file = FileValidator(
-        max_size=1024 * 5000, content_types=('audio/mp3', 'audio/wav', 'audio/ogg'))
+        max_size=1024 * 20000, content_types=('audio/mp3', 'audio/mpeg', 'audio/ogg'))
     song = models.ForeignKey(
         Song, on_delete=models.CASCADE, related_name='audio_files')
     audio_file = models.FileField(

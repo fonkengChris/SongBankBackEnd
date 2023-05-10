@@ -9,10 +9,11 @@ router.register('songs', views.SongViewSet, basename='songs')
 router.register('categories', views.CategoryViewSet)
 router.register('customers', views.CustomerViewSet, basename='customers')
 router.register('notations', views.NotationViewSet)
+router.register('languages', views.LanguageViewSet)
 
 
 songs_router = routers.NestedDefaultRouter(router, 'songs', lookup='song')
-# songs_router.register('reviews', views.ReviewViewSet, basename='song-reviews')
+
 songs_router.register(
     'document_files', views.DocumentSongFileViewSet, basename='document-files')
 songs_router.register(

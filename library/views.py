@@ -1,6 +1,6 @@
 import os
 import tempfile
-
+from django.contrib.postgres.search import SearchVector, SearchQuery
 from django.db.models import Q
 from django_filters.rest_framework import DjangoFilterBackend
 from pdf2image import convert_from_path
@@ -40,13 +40,15 @@ class SongViewSet(ModelViewSet):
             'document_files').prefetch_related('audio_files').prefetch_related('preview_image').all()
         category = self.request.GET.get('category')
         notation = self.request.GET.get('notation')
+        language = self.request.GET.get('language')
         ordering = self.request.GET.get('ordering')
-        slug = self.request.GET.get('slug')
         search = self.request.GET.get('search')
         if category is not None:
             queryset = queryset.filter(category=category)
         if notation is not None:
             queryset = queryset.filter(notation=notation)
+        if language is not None:
+            queryset = queryset.filter(language=language)
         if ordering is not None:
             queryset = queryset.order_by(ordering)
         if search is not None:
