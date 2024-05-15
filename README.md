@@ -1,6 +1,6 @@
 ## SongBank: A Song Management Application
 
-SongBank is a web application that allows users to store, manage, and listen to songs. Users can categorize songs, add lyrics and descriptions, and upload  related document (PDF) and audio (MP3) files. The application also supports searching for songs by title, author name, or lyrics using a full-text search mechanism.
+SongBank is a web application that allows users to view, download the sheet music, and listen to the audio of songs. Users can select songs based on Category, Notation, Genre or Language. There is administrative provision for adding lyrics and descriptions, and upload  related document (PDF) and audio (MP3) files. The application also supports searching for songs by title, author name, or lyrics using a full-text search mechanism. This project serves as the BackEnd and requires a FrontEnd which can be implemented with any available technology.
 
 **Features:**
 
