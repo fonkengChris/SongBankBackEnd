@@ -1,75 +1,274 @@
-## SongBank: A Song Management Application
+Here is the revised README for your Django-based web song library project, incorporating MySQL full-text search instead of Elasticsearch:
 
-SongBank is a web application that allows users to view, download the sheet music, and listen to the audio of songs. Users can select songs based on Category, Notation, Genre or Language. There is administrative provision for adding lyrics and descriptions, and upload  related document (PDF) and audio (MP3) files. The application also supports searching for songs by title, author name, or lyrics using a full-text search mechanism. This project serves as the BackEnd and requires a FrontEnd which can be implemented with any available technology.
+---
 
-**Features:**
+# Song Library Project
 
-* **Song Management:** Create, edit, and view songs.
-* **Categories:** Organize songs into categories.
-* **Lyrics and Descriptions:** Add lyrics and descriptions to songs.
-* **File Uploads:** Upload PDF documents and MP3 audio files associated with songs.
-* **Full-Text Search:** Search for songs by title, author name, or lyrics.
-* **User Authentication:** Register and log in to manage your songs and view private information.
-* **User Favoriting:** Like and unlike songs to create a favorites list (not fully implemented yet).
+## Project Overview
 
-**Technology Stack:**
+The Song Library project is a web application built with Python and Django, designed to manage a collection of songs. It includes features such as user authentication, song search, and filtering using MySQL full-text search, and supports CRUD operations through a RESTful API.
 
-* Backend: Django (Python web framework)
-* Database: MySQL (with Full-Text Search enabled)
-* REST API: Django REST Framework
+## Features
 
-**Requirements:**
+- User Authentication and Authorization
+- Song Management (Create, Read, Update, Delete)
+- Search and Filter Songs using MySQL Full-Text Search
+- Token-based Authentication with JWT
+- CORS support for frontend integration
 
-* Python 3.x
-* Django
-* django-fulltext-search
-* Other dependencies as specified in `requirements.txt`
+## Installation Instructions
 
-**Installation:**
+### Prerequisites
 
-1. Clone the repository:
+- Python 3.10+
+- MySQL
 
-```bash
-git clone https://github.com/fonkengChris/SongBankBackEnd.git
+### Setting Up the Project
+
+1. **Clone the repository**:
+   ```bash
+   git clone https://github.com/fonkengChris/SongBankBackEnd.git
+   cd SongBankBackEnd
+   ```
+
+2. **Create a virtual environment**:
+   ```bash
+   python3 -m venv env
+   source env/bin/activate
+   ```
+
+3. **Install the required dependencies**:
+   ```bash
+   pip install pipenv
+   pipenv install
+   ```
+
+### Dependencies
+
+The project dependencies are listed in the `Pipfile`:
+
+```toml
+[[source]]
+url = "https://pypi.org/simple"
+verify_ssl = true
+name = "pypi"
+
+[packages]
+django = "*"
+django-debug-toolbar = "*"
+mysqlclient = "*"
+djangorestframework = "*"
+django-countries = "*"
+django-phonenumber-field = {extras = ["phonenumberslite"], version = "*"}
+djoser = "*"
+djangorestframework-simplejwt = "*"
+drf-nested-routers = "*"
+django-filter = "*"
+pillow = "*"
+python-magic = "*"
+django-cors-headers = "*"
+wand = "*"
+pypdf2 = "*"
+pdf2image = "*"
+djangorestframework-jwt = "*"
+django-extensions = "*"
+gunicorn = "*"
+dj-database-url = "*"
+django-fulltext-search = {git = "https://github.com/confirm/django-fulltext-search.git"}
+pyjwt = {extras = ["crypto"], version = "*"}
+ipython = "*"
+cryptography = "*"
+
+[dev-packages]
+
+[requires]
+python_version = "3.10"
+
+[pipenv]
+allow_prereleases = true
 ```
 
-2. Create a virtual environment and activate it.
+### Configuration
 
-3. Install dependencies:
+1. **Database Setup**:
+   Update the `DATABASES` settings in `settings.py` to configure MySQL:
 
-```bash
-pip install -r requirements.txt
+   ```python
+   DATABASES = {
+       'default': {
+           'ENGINE': 'django.db.backends.mysql',
+           'NAME': 'songBank',
+           'HOST': 'localhost',
+           'USER': 'root',
+           'PASSWORD': 'your_password',
+           'PORT': '3306',
+       }
+   }
+   ```
+
+2. **JWT Authentication**:
+   Configure JWT settings in `settings.py`:
+
+   ```python
+   SIMPLE_JWT = {
+       'AUTH_HEADER_TYPES': ('JWT',),
+       'ACCESS_TOKEN_LIFETIME': timedelta(days=1),
+       'ALGORITHM': 'RS256',
+       'SIGNING_KEY': private_key,
+       'VERIFYING_KEY': public_key,
+       'USER_ID_FIELD': 'id',
+       'USER_ID_CLAIM': 'user_id',
+       'AUTH_TOKEN_CLASSES': (
+           'rest_framework_simplejwt.tokens.AccessToken',
+       ),
+       'TOKEN_TYPE_CLAIM': 'token_type',
+   }
+   ```
+
+### Running the Project
+
+1. **Apply database migrations**:
+   ```bash
+   python manage.py makemigrations
+   python manage.py migrate
+   ```
+
+2. **Run the development server**:
+   ```bash
+   python manage.py runserver
+   ```
+
+## Usage
+
+### API Endpoints
+
+1. **Get a list of songs**:
+   ```http
+   GET /api/songs/
+   ```
+
+2. **Add a new song**:
+   ```http
+   POST /api/songs/
+   Content-Type: application/json
+   {
+       "title": "Song Title",
+       "artist": "Artist Name",
+       "album": "Album Name",
+       "release_date": "2023-01-01"
+   }
+   ```
+
+### Authentication
+
+1. **User Registration**:
+   ```http
+   POST /auth/users/
+   Content-Type: application/json
+   {
+       "username": "your_username",
+       "password": "your_password"
+   }
+   ```
+
+2. **Obtain JWT Token**:
+   ```http
+   POST /auth/jwt/create/
+   Content-Type: application/json
+   {
+       "username": "your_username",
+       "password": "your_password"
+   }
+   ```
+
+### Full-Text Search
+
+The full-text search functionality is provided by the custom `SearchQuerySet` and `SearchManager` classes. Here is an example of how to use these classes:
+
+#### SearchQuerySet and SearchManager Implementation
+
+```python
+# library/models.py
+
+from django.db import models
+from .search import SearchManager
+
+class Song(models.Model):
+    title = models.CharField(max_length=255)
+    artist = models.CharField(max_length=255)
+    album = models.CharField(max_length=255)
+    release_date = models.DateField()
+
+    objects = SearchManager(fields=['title', 'artist', 'album'])
+
+    def __str__(self):
+        return self.title
 ```
 
-4. Apply database migrations:
+#### Performing a Search
 
-```bash
-python manage.py migrate
+```python
+# library/views.py
+
+from rest_framework import generics
+from .models import Song
+from .serializers import SongSerializer
+
+class SongSearchView(generics.ListAPIView):
+    serializer_class = SongSerializer
+
+    def get_queryset(self):
+        query = self.request.query_params.get('q', '')
+        return Song.objects.search(query)
 ```
 
-5. (Optional) Create a superuser account:
+## Folder Structure
 
-```bash
-python manage.py createsuperuser
+```plaintext
+song-library/
+├── manage.py
+├── songBank/
+│   ├── __init__.py
+│   ├── settings.py
+│   ├── urls.py
+│   ├── wsgi.py
+│   └── asgi.py
+├── library/
+│   ├── __init__.py
+│   ├── admin.py
+│   ├── apps.py
+│   ├── models.py
+│   ├── serializers.py
+│   ├── urls.py
+│   ├── views.py
+│   ├── search.py
+│   └── migrations/
+├── core/
+│   ├── __init__.py
+│   ├── admin.py
+│   ├── apps.py
+│   ├── models.py
+│   ├── serializers.py
+│   ├── urls.py
+│   └── views.py
+├── templates/
+├── static/
+└── Pipfile
 ```
 
-6. Run the development server:
+## Contributing
 
-```bash
-python manage.py runserver
-```
+To contribute to this project:
 
-**Usage:**
+1. Fork the repository.
+2. Create a new branch (`git checkout -b feature/your-feature`).
+3. Make your changes.
+4. Commit your changes (`git commit -m 'Add some feature'`).
+5. Push to the branch (`git push origin feature/your-feature`).
+6. Open a pull request.
 
-The SongBank application provides a REST API for interacting with songs and other data. You can use any REST client or HTTP library to interact with the API. Refer to the Django REST Framework documentation for details on using the API: [https://www.django-rest-framework.org/topics/browsable-api/](https://www.django-rest-framework.org/topics/browsable-api/)
+## License
 
-**Contributing:**
+This project is licensed under the MIT License.
 
-We welcome contributions to the SongBank project! Please see the CONTRIBUTING.md file for guidelines on how to contribute.
-
-**License:**
-
-This project is licensed under the MIT License. See the LICENSE file for details.
-
-**Contact**
-For any concerns, contact the management team at [christianfonkeng@outlook.com]
+---
