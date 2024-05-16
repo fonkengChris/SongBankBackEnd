@@ -1,5 +1,3 @@
-Here is the revised README for your Django-based web song library project, incorporating MySQL full-text search instead of Elasticsearch:
-
 ---
 
 # Song Library Project
